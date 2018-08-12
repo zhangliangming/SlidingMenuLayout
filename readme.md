@@ -2,6 +2,10 @@
 该SlidingMenuLayout主要实现了左边侧边栏、主界面和多个Fragment功能。该控件主要是参考酷狗界面的功能，左侧菜单可设置缩放动画，及打开多个Fragment功能。该控件在后期会整合到[乐乐音乐播放器项目](https://github.com/zhangliangming/HappyPlayer5)中去。
 
 # 日志 #
+
+## v1.1 ##
+- 添加对外接口
+
 ## v1.0 ##
 - 初始导入
 
@@ -38,7 +42,7 @@
 2.app build.gradle
 
 `dependencies {
-	         compile 'com.github.zhangliangming:SlidingMenuLayout:v1.0'
+	         compile 'com.github.zhangliangming:SlidingMenuLayout:v1.1'
 	}`
 
 # 混淆注意 #

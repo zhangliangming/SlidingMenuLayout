@@ -85,7 +85,7 @@ public class SlidingMenuLayout extends FrameLayout {
     /**
      * 最小缩放比例
      */
-    private float mMinScaleY = 0.7f;
+    private float mMinScaleY = 0.8f;
     /**
      * 最大缩放比例
      */
@@ -476,11 +476,20 @@ public class SlidingMenuLayout extends FrameLayout {
     }
 
     /**
+     * 是否正在显示Fragment
+     *
+     * @return
+     */
+    public boolean isShowingFragment() {
+        return mFragmentFrameLayouts.size() > 0;
+    }
+
+    /**
      * 是否正在显示菜单
      *
      * @return
      */
-    private boolean isShowingMenu() {
+    public boolean isShowingMenu() {
         if (mMainLeftX > 0) {
             return true;
         }
@@ -493,7 +502,7 @@ public class SlidingMenuLayout extends FrameLayout {
         if (mDragType == NONE) return super.onInterceptTouchEvent(event);
 
         //有fragment，强制只能从左到右滑动
-        if (mFragmentFrameLayouts.size() > 0) {
+        if (mDragType != LEFT_TO_RIGHT && mFragmentFrameLayouts.size() > 0) {
             mDragType = LEFT_TO_RIGHT;
         }
 
@@ -536,7 +545,7 @@ public class SlidingMenuLayout extends FrameLayout {
         if (mDragType == NONE) return super.onTouchEvent(event);
 
         //有fragment，强制只能从左到右滑动
-        if (mFragmentFrameLayouts.size() > 0) {
+        if (mDragType != LEFT_TO_RIGHT && mFragmentFrameLayouts.size() > 0) {
             mDragType = LEFT_TO_RIGHT;
         }
 
