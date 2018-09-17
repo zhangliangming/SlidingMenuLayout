@@ -3,20 +3,16 @@ apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.zhangliangming'
 
 android {
-    compileSdkVersion 26
-
-
-
+    compileSdkVersion 28
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 26
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
-
     buildTypes {
 
         release {
@@ -25,7 +21,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    buildToolsVersion '28.0.2'
+    productFlavors {
+    }
 }
 
 dependencies {

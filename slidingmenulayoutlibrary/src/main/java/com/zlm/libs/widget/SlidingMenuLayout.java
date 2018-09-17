@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
@@ -25,6 +26,7 @@ import android.widget.LinearLayout;
 import com.zlm.libs.register.RegisterHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description: SlidingMenu布局，该界面的view是一层一层的，所以这里使用FrameLayout布局
@@ -153,6 +155,11 @@ public class SlidingMenuLayout extends FrameLayout {
      * 阴影画笔
      */
     private Paint mFragmentFadePaint;
+
+    /**
+     * 不拦截水平视图
+     */
+    private List<View> mIgnoreHorizontalViews;
 
     public SlidingMenuLayout(Context context) {
         super(context);
@@ -525,7 +532,7 @@ public class SlidingMenuLayout extends FrameLayout {
                 if (Math.abs(deltaX) > mTouchSlop
                         && Math.abs(deltaY) < mTouchSlop) {
 
-                    if ((deltaX < 0 && mDragType == LEFT_TO_RIGHT) || (deltaX > 0 && mDragType == RIGHT_TO_LEFT)) {
+                    if (((deltaX < 0 && mDragType == LEFT_TO_RIGHT) || (deltaX > 0 && mDragType == RIGHT_TO_LEFT)) && !isInIgnoreHorizontalView(event)) {
                         //左右移动
                         intercepted = true;
                     }
@@ -568,7 +575,7 @@ public class SlidingMenuLayout extends FrameLayout {
                     int dx = (int) (mLastX - curX);
 
                     //左右移动
-                    if (isTouchMove || (deltaX < 0 && mDragType == LEFT_TO_RIGHT) || (deltaX > 0 && mDragType == RIGHT_TO_LEFT)) {
+                    if ((isTouchMove || (deltaX < 0 && mDragType == LEFT_TO_RIGHT) || (deltaX > 0 && mDragType == RIGHT_TO_LEFT)) && !isInIgnoreHorizontalView(event)) {
                         isTouchMove = true;
 
                         if (mFrameLayouts.size() > 0) {
@@ -795,6 +802,55 @@ public class SlidingMenuLayout extends FrameLayout {
             }
         }
 
+    }
+
+    /**
+     * 是否在水平不处理视图中
+     *
+     * @param event
+     * @return
+     */
+    private boolean isInIgnoreHorizontalView(MotionEvent event) {
+        return mFragmentFrameLayouts.size() == 0 && isInView(mIgnoreHorizontalViews, event);
+    }
+
+    /**
+     * 是否在view里面
+     *
+     * @param views
+     * @param event
+     * @return
+     */
+    private boolean isInView(List<View> views, MotionEvent event) {
+        if (views == null || views.size() == 0)
+            return false;
+        for (int i = 0; i < views.size(); i++) {
+            View view = views.get(i);
+            Rect rect = new Rect(view.getLeft(), view.getTop(),
+                    view.getRight(), view.getBottom());
+            if (rect.contains((int) event.getX(), (int) event.getY())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 添加不拦截水平view
+     *
+     * @param ignoreView
+     */
+    public void addIgnoreHorizontalView(View ignoreView) {
+        if (mIgnoreHorizontalViews == null) {
+            mIgnoreHorizontalViews = new ArrayList<View>();
+        }
+        if (!mIgnoreHorizontalViews.contains(ignoreView)) {
+            mIgnoreHorizontalViews.add(ignoreView);
+        }
+    }
+
+    public void setIgnoreHorizontalViews(List<View> ignoreHorizontalViews) {
+        this.mIgnoreHorizontalViews = ignoreHorizontalViews;
     }
 
 
