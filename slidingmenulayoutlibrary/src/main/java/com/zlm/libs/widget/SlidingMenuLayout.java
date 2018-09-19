@@ -811,7 +811,7 @@ public class SlidingMenuLayout extends FrameLayout {
      * @return
      */
     private boolean isInIgnoreHorizontalView(MotionEvent event) {
-        return mFragmentFrameLayouts.size() == 0 && isInView(mIgnoreHorizontalViews, event);
+        return !isShowingMenu() && mFragmentFrameLayouts.size() == 0 && isInView(mIgnoreHorizontalViews, event);
     }
 
     /**
