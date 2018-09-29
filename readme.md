@@ -42,7 +42,7 @@
 2.app build.gradle
 
 `dependencies {
-	         compile 'com.github.zhangliangming:SlidingMenuLayout:v1.2'
+	         compile 'com.github.zhangliangming:SlidingMenuLayout:v1.5'
 	}`
 
 # 混淆注意 #
