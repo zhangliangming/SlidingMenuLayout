@@ -686,26 +686,23 @@ public class SlidingMenuLayout extends FrameLayout {
         isFragmentOpening = true;
 
         if (mFragmentFrameLayouts != null && mFragmentFrameLayouts.size() == 0) {
-            mFragmentFrameLayout.getViewTreeObserver().addOnGlobalLayoutListener(
-                    new ViewTreeObserver.OnGlobalLayoutListener() {
+            mFragmentFrameLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mFragmentFrameLayouts.add(mFragmentFrameLayout);
+
+                    mFrameLayouts.add(mFrameLayout);
+                    int from = mFrameLayout.getLeft();
+                    int to = 0;
+                    frameLayoutScroll(from, to, mFrameLayout, new UpdateLocationListener() {
                         @Override
-                        public void onGlobalLayout() {
-
-                            mFragmentFrameLayouts.add(mFragmentFrameLayout);
-                            mFragmentFrameLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                            mFrameLayouts.add(mFrameLayout);
-                            int from = mFrameLayout.getLeft();
-                            int to = 0;
-                            frameLayoutScroll(from, to, mFrameLayout, new UpdateLocationListener() {
-                                @Override
-                                public void updateLeftX(int leftx) {
-                                    mFrameLayoutLeftX = leftx;
-                                    mFragmentFrameLayout.updateCurFrameLayoutLeftX(leftx);
-                                }
-                            });
+                        public void updateLeftX(int leftx) {
+                            mFrameLayoutLeftX = leftx;
+                            mFragmentFrameLayout.updateCurFrameLayoutLeftX(leftx);
                         }
                     });
+                }
+            });
             mFragmentFrameLayout.setCurFragment(fragmentManager, fragment);
 
 
@@ -714,27 +711,25 @@ public class SlidingMenuLayout extends FrameLayout {
             final FragmentFrameLayout preFragmentFrameLayout = mFragmentFrameLayouts.get(mFragmentFrameLayouts.size() - 1);
             final FragmentFrameLayout curFragmentFrameLayout = preFragmentFrameLayout.getNextFragmentFrameLayout();
             if (curFragmentFrameLayout == null) return;
-            curFragmentFrameLayout.getViewTreeObserver().addOnGlobalLayoutListener(
-                    new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            curFragmentFrameLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mFragmentFrameLayouts.add(curFragmentFrameLayout);
+
+                    FrameLayout frameLayout = preFragmentFrameLayout.getNextFrameLayout();
+                    mFrameLayouts.add(frameLayout);
+                    int from = frameLayout.getLeft();
+                    int to = 0;
+                    frameLayoutScroll(from, to, frameLayout, new UpdateLocationListener() {
                         @Override
-                        public void onGlobalLayout() {
-
-
-                            mFragmentFrameLayouts.add(curFragmentFrameLayout);
-                            curFragmentFrameLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                            FrameLayout frameLayout = preFragmentFrameLayout.getNextFrameLayout();
-                            mFrameLayouts.add(frameLayout);
-                            int from = frameLayout.getLeft();
-                            int to = 0;
-                            frameLayoutScroll(from, to, frameLayout, new UpdateLocationListener() {
-                                @Override
-                                public void updateLeftX(int leftx) {
-                                    preFragmentFrameLayout.updateNextFrameLayoutLeftX(leftx);
-                                }
-                            });
+                        public void updateLeftX(int leftx) {
+                            preFragmentFrameLayout.updateNextFrameLayoutLeftX(leftx);
                         }
                     });
+                }
+            });
+
             curFragmentFrameLayout.setCurFragment(fragmentManager, fragment);
         }
     }
