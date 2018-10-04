@@ -161,6 +161,8 @@ public class SlidingMenuLayout extends FrameLayout {
      */
     private List<View> mIgnoreHorizontalViews;
 
+    private OnPageChangeListener mOnPageChangeListener;
+
     public SlidingMenuLayout(Context context) {
         super(context);
         init(context);
@@ -383,6 +385,10 @@ public class SlidingMenuLayout extends FrameLayout {
         }
         mMainLeftX = mainCurLeftX;
 
+        if (mOnPageChangeListener != null) {
+            mOnPageChangeListener.onMainPageScrolled(mMainLeftX);
+        }
+
         //设置main位置
         int mainViewWidth = mMainLinearLayout.getWidth();
         int menuViewWidth = mMenuLinearLayout.getWidth();
@@ -506,12 +512,15 @@ public class SlidingMenuLayout extends FrameLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        if (mDragType == NONE) return super.onInterceptTouchEvent(event);
+
 
         //有fragment，强制只能从左到右滑动
         if (mDragType != LEFT_TO_RIGHT && mFragmentFrameLayouts.size() > 0) {
             mDragType = LEFT_TO_RIGHT;
         }
+
+        if (mDragType == NONE) return super.onInterceptTouchEvent(event);
+
 
         boolean intercepted = false;
         float curX = event.getX();
@@ -549,12 +558,13 @@ public class SlidingMenuLayout extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mDragType == NONE) return super.onTouchEvent(event);
 
         //有fragment，强制只能从左到右滑动
         if (mDragType != LEFT_TO_RIGHT && mFragmentFrameLayouts.size() > 0) {
             mDragType = LEFT_TO_RIGHT;
         }
+
+        if (mDragType == NONE) return super.onTouchEvent(event);
 
         float curX = event.getX();
         float curY = event.getY();
@@ -661,10 +671,8 @@ public class SlidingMenuLayout extends FrameLayout {
                     //重新加载下一个Fragment所在的页面布局
                     reloadNextPage();
                 }
-                if (mFrameLayouts.size() > 0) {
-                    //还原手势事件
-                    mDragType = mOldDragType;
-                }
+                //还原手势事件
+                mDragType = mOldDragType;
             }
         });
         mValueAnimator.setInterpolator(new LinearInterpolator());
@@ -905,6 +913,18 @@ public class SlidingMenuLayout extends FrameLayout {
     private interface UpdateLocationListener {
         void updateLeftX(int leftx);
     }
+
+    public void addOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
+        this.mOnPageChangeListener = onPageChangeListener;
+    }
+
+    public interface OnPageChangeListener {
+        /**
+         *
+         */
+        void onMainPageScrolled(int leftx);
+    }
+
 
     /**
      *
