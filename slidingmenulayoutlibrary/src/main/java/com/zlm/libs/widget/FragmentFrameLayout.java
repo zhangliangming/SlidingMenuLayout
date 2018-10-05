@@ -141,14 +141,14 @@ public class FragmentFrameLayout extends FrameLayout {
     }
 
 
-    /**
-     * 更新
-     *
-     * @param leftx
-     */
-    public void updateCurFrameLayoutLeftX(int leftx) {
-        this.mCurFragmentLayoutLeftX = leftx;
-    }
+//    /**
+//     * 更新
+//     *
+//     * @param leftx
+//     */
+//    public void updateCurFrameLayoutLeftX(int leftx) {
+//        this.mCurFragmentLayoutLeftX = leftx;
+//    }
 
     public void updateNextFrameLayoutLeftX(int leftx) {
         this.mNextFrameLayoutLeftX = leftx;

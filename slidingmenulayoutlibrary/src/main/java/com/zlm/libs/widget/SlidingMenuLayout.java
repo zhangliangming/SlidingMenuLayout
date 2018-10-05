@@ -467,7 +467,7 @@ public class SlidingMenuLayout extends FrameLayout {
         frameLayout.layout(leftx, 0, leftx + frameLayout.getWidth(), frameLayout.getHeight());
         if (index == 0) {
             mFrameLayoutLeftX = leftx;
-            mFragmentFrameLayout.updateCurFrameLayoutLeftX(leftx);
+           // mFragmentFrameLayout.updateCurFrameLayoutLeftX(leftx);
         } else if (index < mFragmentFrameLayouts.size()) {
             FragmentFrameLayout fragmentFrameLayout = mFragmentFrameLayouts.get(index);
             fragmentFrameLayout.updateNextFrameLayoutLeftX(leftx);
@@ -706,7 +706,7 @@ public class SlidingMenuLayout extends FrameLayout {
                         @Override
                         public void updateLeftX(int leftx) {
                             mFrameLayoutLeftX = leftx;
-                            mFragmentFrameLayout.updateCurFrameLayoutLeftX(leftx);
+//                            mFragmentFrameLayout.updateCurFrameLayoutLeftX(leftx);
                         }
                     });
                 }
