@@ -467,7 +467,7 @@ public class SlidingMenuLayout extends FrameLayout {
         frameLayout.layout(leftx, 0, leftx + frameLayout.getWidth(), frameLayout.getHeight());
         if (index == 0) {
             mFrameLayoutLeftX = leftx;
-           // mFragmentFrameLayout.updateCurFrameLayoutLeftX(leftx);
+            // mFragmentFrameLayout.updateCurFrameLayoutLeftX(leftx);
         } else if (index < mFragmentFrameLayouts.size()) {
             FragmentFrameLayout fragmentFrameLayout = mFragmentFrameLayouts.get(index);
             fragmentFrameLayout.updateNextFrameLayoutLeftX(leftx);
@@ -797,11 +797,12 @@ public class SlidingMenuLayout extends FrameLayout {
             int size = mFrameLayouts.size();
             if (size > 0) {
                 int left = mFrameLayouts.get(size - 1).getLeft();
-
-                float percent = left * 1.0f / getWidth();
-                int alpha = mMinAlpha - (int) (mMinAlpha * percent);
-                mFragmentFadePaint.setColor(Color.argb(Math.max(alpha, 0), 0, 0, 0));
-                canvas.drawRect(0, 0, left, getHeight(), mFragmentFadePaint);
+                if (left > 10) {
+                    float percent = left * 1.0f / getWidth();
+                    int alpha = mMinAlpha - (int) (mMinAlpha * percent);
+                    mFragmentFadePaint.setColor(Color.argb(Math.max(alpha, 0), 0, 0, 0));
+                    canvas.drawRect(0, 0, left, getHeight(), mFragmentFadePaint);
+                }
             }
         }
 
