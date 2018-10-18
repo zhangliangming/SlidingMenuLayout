@@ -59,6 +59,7 @@ public class FragmentFrameLayout extends FrameLayout {
      */
     private void init(Context context) {
         this.mContext = context;
+        setClickable(true);
         onAttachView();
     }
 
