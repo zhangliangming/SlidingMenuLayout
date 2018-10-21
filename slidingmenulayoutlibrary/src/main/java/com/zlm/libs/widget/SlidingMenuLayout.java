@@ -728,7 +728,7 @@ public class SlidingMenuLayout extends FrameLayout {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(50);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
