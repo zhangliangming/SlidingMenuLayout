@@ -163,6 +163,11 @@ public class SlidingMenuLayout extends FrameLayout {
 
     private OnPageChangeListener mOnPageChangeListener;
 
+    /**
+     * 是否是打开frag
+     */
+    private boolean mIsAddOpenFragment = false;
+
     public SlidingMenuLayout(Context context) {
         super(context);
         init(context);
@@ -701,17 +706,12 @@ public class SlidingMenuLayout extends FrameLayout {
                             mFragmentFrameLayout.getViewTreeObserver()
                                     .removeGlobalOnLayoutListener(this);
 
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                             mFragmentFrameLayouts.add(mFragmentFrameLayout);
 
                             mFrameLayouts.add(mFrameLayout);
                             int from = mFrameLayout.getLeft();
                             int to = 0;
-                            frameLayoutScroll(from, to, mFrameLayout, new UpdateLocationListener() {
+                            frameLayoutScroll(from, to, mFrameLayout, true, new UpdateLocationListener() {
                                 @Override
                                 public void updateLeftX(int leftx) {
                                     mFrameLayoutLeftX = leftx;
@@ -737,18 +737,13 @@ public class SlidingMenuLayout extends FrameLayout {
                             curFragmentFrameLayout.getViewTreeObserver()
                                     .removeGlobalOnLayoutListener(this);
 
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                             mFragmentFrameLayouts.add(curFragmentFrameLayout);
 
                             FrameLayout frameLayout = preFragmentFrameLayout.getNextFrameLayout();
                             mFrameLayouts.add(frameLayout);
                             int from = frameLayout.getLeft();
                             int to = 0;
-                            frameLayoutScroll(from, to, frameLayout, new UpdateLocationListener() {
+                            frameLayoutScroll(from, to, frameLayout, true, new UpdateLocationListener() {
                                 @Override
                                 public void updateLeftX(int leftx) {
                                     preFragmentFrameLayout.updateNextFrameLayoutLeftX(leftx);
@@ -767,7 +762,9 @@ public class SlidingMenuLayout extends FrameLayout {
      * @param from
      * @param to
      */
-    public void frameLayoutScroll(int from, int to, final View scrollView, final UpdateLocationListener updateLocationListener) {
+    public void frameLayoutScroll(int from, int to, final View scrollView, boolean isAddOpenFragment, final UpdateLocationListener updateLocationListener) {
+        mIsAddOpenFragment = isAddOpenFragment;
+
         if (mValueAnimator != null && mValueAnimator.isRunning()) {
             mValueAnimator.cancel();
             mValueAnimator = null;
@@ -785,6 +782,7 @@ public class SlidingMenuLayout extends FrameLayout {
         mValueAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
+                mIsAddOpenFragment = false;
                 isFragmentOpening = false;
                 //Fragment动画结束后，预加载下一个Fragment所在的界面布局
                 int size = mFragmentFrameLayouts.size();
@@ -812,7 +810,7 @@ public class SlidingMenuLayout extends FrameLayout {
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
-        if (isFragmentPaintFade) {
+        if (isFragmentPaintFade && !mIsAddOpenFragment) {
             int size = mFrameLayouts.size();
             if (size > 0) {
                 int left = mFrameLayouts.get(size - 1).getLeft();
