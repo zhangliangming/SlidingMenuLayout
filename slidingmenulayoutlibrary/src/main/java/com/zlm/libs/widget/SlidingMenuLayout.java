@@ -661,9 +661,13 @@ public class SlidingMenuLayout extends FrameLayout {
         mValueAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
+                Fragment fragment = null;
                 //
                 if (mFrameLayouts.size() > 0) {
                     if (frameLayout.getLeft() > getWidth() / 2) {
+
+                        fragment = mFragmentFrameLayouts.get(index).getFragment();
+
                         mFrameLayouts.remove(index);
                         mFragmentFrameLayouts.remove(index);
                     }
@@ -671,13 +675,17 @@ public class SlidingMenuLayout extends FrameLayout {
                 if (mFrameLayouts.size() > 0) {
                     //上一个页面重新加载下一个Fragment所在的页面布局
                     mFragmentFrameLayouts.get(mFrameLayouts.size() - 1).reloadNextPage();
-                    ;
                 } else {
                     //重新加载下一个Fragment所在的页面布局
                     reloadNextPage();
                 }
                 //还原手势事件
                 mDragType = mOldDragType;
+
+                //fragment关闭回调
+                if(fragment != null && mOnPageChangeListener != null){
+                    mOnPageChangeListener.onHideFragment(fragment);
+                }
             }
         });
         mValueAnimator.setInterpolator(new LinearInterpolator());
@@ -940,6 +948,11 @@ public class SlidingMenuLayout extends FrameLayout {
          *
          */
         void onMainPageScrolled(int leftx);
+
+        /**
+         *
+         */
+        void onHideFragment(Fragment fragment);
     }
 
 

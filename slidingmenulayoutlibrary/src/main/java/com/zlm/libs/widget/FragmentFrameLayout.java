@@ -42,6 +42,8 @@ public class FragmentFrameLayout extends FrameLayout {
      */
     private int mCurFragmentLayoutLeftX, mNextFrameLayoutLeftX;
 
+    private Fragment mCurFragment;
+
     public FragmentFrameLayout(@NonNull Context context) {
         super(context);
         init(context);
@@ -98,6 +100,7 @@ public class FragmentFrameLayout extends FrameLayout {
      * @param curFragment
      */
     public void setCurFragment(FragmentManager fragmentManager, Fragment curFragment) {
+        this.mCurFragment = curFragment;
         fragmentManager.beginTransaction().add(mCurFrameLayout.getId(), curFragment).commit();
     }
 
@@ -150,6 +153,11 @@ public class FragmentFrameLayout extends FrameLayout {
 //    public void updateCurFrameLayoutLeftX(int leftx) {
 //        this.mCurFragmentLayoutLeftX = leftx;
 //    }
+
+
+    public Fragment getFragment() {
+        return mCurFragment;
+    }
 
     public void updateNextFrameLayoutLeftX(int leftx) {
         this.mNextFrameLayoutLeftX = leftx;
